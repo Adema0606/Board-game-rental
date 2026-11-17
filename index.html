@@ -4,39 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Прокат настольных игр</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Прокат настольных игр</h1>
+ <div class="container">
+    <h1>Прокат настольных игр</h1>
 
-  <div>
-    <label for="newGameTitle">Название игры</label>
-    <input id="newGameTitle" type="text">
-    
-    <label for="newGamePlayers">Число игроков</label>
-    <input id="newGamePlayers" type="number">
-    
-    <button id="addGameButton" type="button">Добавить игру</button>
+    <div class="card">
+      <h2>Добавить игру</h2>
+      
+      <div class="field">
+        <label for="newGameTitle">Название игры</label>
+        <input id="newGameTitle" type="text" placeholder="Например, Домино">
+      </div>
+      
+      <div class="field">
+        <label for="newGamePlayers">Число игроков</label>
+        <input id="newGamePlayers" type="number" placeholder="4">
+      </div>
+      
+      <button id="addGameButton" type="button" class="btn-add">Добавить игру</button>
+    </div>
+
+    <div class="filter-group">
+      <input type="checkbox" id="showOnlyFree">
+      <label for="showOnlyFree">Показать только свободные</label>
+    </div>
+
+    <ul id="gameList" class="game-list"></ul>
+
+    <div class="card">
+      <h2>Выдача / Возврат</h2>
+      
+      <div class="field">
+        <label for="gameSelect">Выберите игру</label>
+        <select id="gameSelect">
+          <option value="0">Каркассон</option>
+          <option value="1">Доббль</option>
+          <option value="2">Шахматы</option>
+        </select>
+      </div>
+      
+      <div class="field">
+        <label for="borrowerName">Имя посетителя</label>
+        <input id="borrowerName" type="text" placeholder="Введите имя">
+      </div>
+      
+      <div class="btn-group">
+        <button id="borrowButton" type="button" class="btn-borrow">Выдать</button>
+        <button id="returnButton" type="button" class="btn-return">Вернуть</button>
+      </div>
+      
+      <p id="message" class="message"></p>
+    </div>
   </div>
-
-  <div>
-    <input type="checkbox" id="showOnlyFree">
-    <label for="showOnlyFree">Только свободные</label>
-  </div>
-
-  <ul id="gameList"></ul>
-
-  <label for="gameSelect">Игра</label>
-  <select id="gameSelect">
-    <option value="0">Каркассон</option>
-    <option value="1">Доббль</option>
-    <option value="2">Шахматы</option>
-  </select>
-
-  <label for="borrowerName">Имя посетителя</label>
-  <input id="borrowerName" type="text">
-  <button id="borrowButton" type="button">Выдать</button>
-  <button id="returnButton" type="button">Вернуть</button>
-  <p id="message"></p>
 
 <script src="index.js"></script>
 </body>
