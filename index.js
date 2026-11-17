@@ -24,3 +24,28 @@ games.forEach((game) => {
   });
 
 renderGames();
+
+const gameSelect = document.getElementById('gameSelect');
+const borrowerName = document.getElementById('borrowerName');
+const borrowButton = document.getElementById('borrowButton');
+const message = document.getElementById('message');
+
+borrowButton.addEventListener('click', () => {
+  const index = Number(gameSelect.value);
+  const game = games[index];
+  const name = borrowerName.value.trim();
+
+  if (name === '') {
+    message.textContent = 'Введите имя';
+    return;
+  }
+
+  if (game.borrower !== null) {
+    message.textContent = 'Игра уже выдана';
+    return;
+  }
+
+  game.borrower = name;
+  message.textContent = 'Игра выдана';
+  renderGames();
+});
