@@ -10,7 +10,6 @@ function renderGames() {
   gameList.innerHTML = '';
 }
 
-
 games.forEach((game) => {
     const item = document.createElement('li');
     let status = 'Свободна';
@@ -19,7 +18,7 @@ games.forEach((game) => {
       status = 'Взял(а): ' + game.borrower;
     }
 
-    item.textContent = game.title + ' · ' + game.players + ' игрока · ' + status;
+    item.textContent = game.title + ' ' + game.players + ' игрока ' + status;
     gameList.append(item);
   });
 
@@ -47,5 +46,21 @@ borrowButton.addEventListener('click', () => {
 
   game.borrower = name;
   message.textContent = 'Игра выдана';
+  renderGames();
+});
+
+const returnButton = document.getElementById('returnButton');
+
+returnButton.addEventListener('click', () => {
+  const index = Number(gameSelect.value);
+  const game = games[index];
+
+  if (game.borrower === null) {
+    message.textContent = 'Игра уже свободна';
+    return;
+  }
+
+  game.borrower = null;
+  message.textContent = 'Игра возвращена';
   renderGames();
 });
