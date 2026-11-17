@@ -5,14 +5,29 @@ const games = [
 ];
 
 const gameList = document.getElementById('gameList');
+const gameSelect = document.getElementById('gameSelect');
+const borrowerName = document.getElementById('borrowerName');
+const borrowButton = document.getElementById('borrowButton');
+const returnButton = document.getElementById('returnButton');
+const message = document.getElementById('message');
+const showOnlyFree = document.getElementById('showOnlyFree');
+const newGameTitle = document.getElementById('newGameTitle');
+const newGamePlayers = document.getElementById('newGamePlayers');
+const addGameButton = document.getElementById('addGameButton');
 
 function renderGames() {
-  gameList.innerHTML = '';
+  gameList.innerHTML = ''; 
+  let countRendered = 0;
 
   games.forEach((game) => {
-    const item = document.createElement('li');
+    if (showOnlyFree.checked && game.borrower !== null) {
+      return; 
+    }
 
+    countRendered++;
+    const item = document.createElement('li');
     let word = 'игрока';
+    
     if (game.players === 6) {
       word = 'игроков';
     }
@@ -22,15 +37,31 @@ function renderGames() {
       status = 'У ' + game.borrower;
     }
 
-    item.textContent = game.title + ' ' + game.players + ' ' + word + ' ' + status;
+    item.textContent = game.title + ' · ' + game.players + ' ' + word + ' · ' + status;
     gameList.append(item);
+  });
+
+  if (showOnlyFree.checked && countRendered === 0) {
+    const item = document.createElement('li');
+    item.textContent = 'Свободных игр пока нет';
+    gameList.append(item);
+  }
+}
+
+function renderGameOptions() {
+  gameSelect.innerHTML = ''; 
+
+  games.forEach((game, index) => {
+    const option = document.createElement('option');
+    option.textContent = game.title;
+    option.value = index;
+    gameSelect.append(option);
   });
 }
 
-const gameSelect = document.getElementById('gameSelect');
-const borrowerName = document.getElementById('borrowerName');
-const borrowButton = document.getElementById('borrowButton');
-const message = document.getElementById('message');
+showOnlyFree.addEventListener('change', () => {
+  renderGames();
+});
 
 borrowButton.addEventListener('click', () => {
   const index = Number(gameSelect.value);
@@ -52,8 +83,6 @@ borrowButton.addEventListener('click', () => {
   renderGames();
 });
 
-const returnButton = document.getElementById('returnButton');
-
 returnButton.addEventListener('click', () => {
   const index = Number(gameSelect.value);
   const game = games[index];
@@ -68,4 +97,29 @@ returnButton.addEventListener('click', () => {
   renderGames();
 });
 
+addGameButton.addEventListener('click', () => {
+  const title = newGameTitle.value.trim();
+  const playersStr = newGamePlayers.value.trim();
+  const players = Number(playersStr);
+
+  if (title !== '' && players > 0 && Number.isInteger(players)) {
+    const newGame = {
+      title: title,
+      players: players,
+      borrower: null
+    };
+
+    games.push(newGame);
+    renderGames();
+    renderGameOptions();
+
+    newGameTitle.value = '';
+    newGamePlayers.value = '';
+    message.textContent = 'Игра добавлена';
+  } else {
+    message.textContent = 'Заполните название и положительное число игроков';
+  }
+});
+
 renderGames();
+renderGameOptions();
