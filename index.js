@@ -22,7 +22,7 @@ function renderGames() {
       status = 'У ' + game.borrower;
     }
 
-    item.textContent = game.title + ' · ' + game.players + ' ' + word + ' · ' + status;
+    item.textContent = game.title + ' ' + game.players + ' ' + word + ' ' + status;
     gameList.append(item);
   });
 }
