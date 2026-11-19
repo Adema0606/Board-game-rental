@@ -123,3 +123,6 @@ addGameButton.addEventListener('click', () => {
 
 renderGames();
 renderGameOptions();
+
+
+//должно учитываться скольким людям могу выдать игру тип максимум сколькокто и если ктото попросит больше не смогу выдать 
