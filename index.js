@@ -1,7 +1,7 @@
 const games = [
-  { title: 'Каркассон', players: 4, borrower: null },
-  { title: 'Доббль', players: 6, borrower: 'Аня' },
-  { title: 'Шахматы', players: 2, borrower: null }
+  { title: 'Каркассон', players: 4, count: 2, available: 2, borrower: null },
+  { title: 'Доббль', players: 6, count: 1, available: 0, borrower: 'Аня' },
+  { title: 'Шахматы', players: 2, count: 1, available: 1, borrower: null }
 ];
 
 const gameList = document.getElementById('gameList');
@@ -13,6 +13,7 @@ const message = document.getElementById('message');
 const showOnlyFree = document.getElementById('showOnlyFree');
 const newGameTitle = document.getElementById('newGameTitle');
 const newGamePlayers = document.getElementById('newGamePlayers');
+const newGameCount = document.getElementById('newGameCount');
 const addGameButton = document.getElementById('addGameButton');
 
 function renderGames() {
@@ -20,7 +21,7 @@ function renderGames() {
   let countRendered = 0;
 
   games.forEach((game) => {
-    if (showOnlyFree.checked && game.borrower !== null) {
+    if (showOnlyFree.checked && game.available === 0) {
       return; 
     }
 
@@ -33,11 +34,13 @@ function renderGames() {
     }
 
     let status = 'Свободна';
-    if (game.borrower !== null) {
+    if (game.available === 0) {
+      status = 'Нет в наличии';
+    } else if (game.borrower !== null) {
       status = 'У ' + game.borrower;
     }
 
-    item.textContent = game.title + ' · ' + game.players + ' ' + word + ' · ' + status;
+    item.textContent = game.title + ' · ' + game.players + ' ' + word + ' · Остаток: ' + game.available + ' · ' + status;
     gameList.append(item);
   });
 
@@ -73,11 +76,12 @@ borrowButton.addEventListener('click', () => {
     return;
   }
 
-  if (game.borrower !== null) {
-    message.textContent = 'Игра уже выдана';
+  if (game.available === 0) {
+    message.textContent = 'Игр этой игры больше нет в наличии';
     return;
   }
 
+  game.available = game.available - 1;
   game.borrower = name;
   message.textContent = 'Игра выдана';
   renderGames();
@@ -87,12 +91,17 @@ returnButton.addEventListener('click', () => {
   const index = Number(gameSelect.value);
   const game = games[index];
 
-  if (game.borrower === null) {
-    message.textContent = 'Игра уже свободна';
+  if (game.available === game.count) {
+    message.textContent = 'Все экземпляры уже на месте';
     return;
   }
 
-  game.borrower = null;
+  game.available = game.available + 1;
+  
+  if (game.available === game.count) {
+    game.borrower = null;
+  }
+  
   message.textContent = 'Игра возвращена';
   renderGames();
 });
@@ -101,11 +110,14 @@ addGameButton.addEventListener('click', () => {
   const title = newGameTitle.value.trim();
   const playersStr = newGamePlayers.value.trim();
   const players = Number(playersStr);
+  const count = Number(newGameCount.value);
 
-  if (title !== '' && players > 0 && Number.isInteger(players)) {
+  if (title !== '' && players > 0 && Number.isInteger(players) && count > 0) {
     const newGame = {
       title: title,
       players: players,
+      count: count,
+      available: count,
       borrower: null
     };
 
@@ -115,14 +127,15 @@ addGameButton.addEventListener('click', () => {
 
     newGameTitle.value = '';
     newGamePlayers.value = '';
+    newGameCount.value = '';
     message.textContent = 'Игра добавлена';
   } else {
-    message.textContent = 'Заполните название и положительное число игроков';
+    message.textContent = 'Заполните все поля правильно';
   }
 });
 
 renderGames();
 renderGameOptions();
 
-
 //должно учитываться скольким людям могу выдать игру тип максимум сколькокто и если ктото попросит больше не смогу выдать 
+//чтобы можно было как админ изменять колличество которое есть если например новый завоз
